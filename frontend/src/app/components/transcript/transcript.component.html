@@ -1,0 +1,77 @@
+<ng-container *ngIf="this.transcript">
+  <div class="container">
+    <div class="transcript_information">
+      <div class="text-white d-flex "><h3>{{transcriptName}}</h3></div>
+      <div class="text-white d-flex info">
+        {{transcript.timestamp | date:'yyyy-MM-dd':'UTC +2'}}
+      </div>
+      <div class="text-white d-flex info">
+        | {{transcript.timestamp | date:'HH:mm':'UTC +2'}}
+        - {{transcript.endTime | date:'HH:mm':'UTC +2'}}
+      </div>
+      <div class="text-white d-flex">
+        | by: {{transcript.author.firstName}} {{transcript.author.lastName}}
+      </div>
+
+      <div class="d-flex text-white">Transcription:
+        <div class="text-warning d-flex justify-content-left mx-2" *ngIf="transcript.progress < transcript.totalSteps">
+          Transcription is still
+          in progress... ({{(transcript.progress / transcript.totalSteps) * 100 | number: '1.0-0'}}&percnt;)
+        </div>
+        <div class="text-success d-flex justify-content-left mx-2" *ngIf="transcript.progress >= transcript.totalSteps">
+          Transcription finished!
+        </div>
+      </div>
+
+      <div class="infotitle">
+        <div class="d-flex text-white ">
+          <div [ngClass]="{'bi bi-chevron-down' : showDescription, 'bi bi-chevron-right' : !showDescription}"
+               (click)="toggleDescription()">
+            description
+            <div *ngIf="showDescription" class="d-flex text-white mb-3 infotext">{{transcript.description}}</div>
+          </div>
+        </div>
+        <div class="d-flex text-white">
+          <div [ngClass]="{'bi bi-chevron-down' : showSummary, 'bi bi-chevron-right' : !showSummary}"
+               (click)="toggleSummary()">
+            summary
+            <div *ngIf="showSummary" class="d-flex text-white mb-3 infotext">{{transcript.summary}}</div>
+          </div>
+        </div>
+      </div>
+
+      <button id="newMessagesInfo" class="btn btn-dark btn-sm " (click)="scrollChatDown()">
+        <i *ngIf="newMessages">New messages. </i>
+        <i class="bi bi-arrow-bar-down"></i>
+        <span class="hoverText hover1">scroll down</span>
+      </button>
+
+    </div>
+  </div>
+</ng-container>
+
+<div class="d-flex">
+  <div class="scroll messages" #scrollDown id="scrollDown" (scroll)="scrolled($event)">
+    <div class="column">
+      <div class="card" style="width: 40rem;" *ngFor="let message of this.messages">
+        <div>
+          <div class="card-body border-0">
+            <h5 class="card-title text-white">{{formatUserName(message.user)}}</h5>
+            <h6
+              class="card-subtitle mb-2 text-muted text-white">{{message.timestamp | date: 'yyyy-MM-dd HH:mm:ss' : 'GMT+02:00' }}
+              <i             class="bi bi-link-45deg"
+                             (click)="copyLinkToClipboard(message)">
+                <span class="hoverText">copy message reference to clipboard</span>
+              </i>
+            </h6>
+
+            <p class="card-text text-white">{{message.content}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+

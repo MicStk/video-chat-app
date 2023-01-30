@@ -1,0 +1,105 @@
+<div *ngIf="authService.isLoggedIn() && open">
+  <div id="container">
+    <div class="sidebar">
+      <button id="closeSideBar" class="btn btn-dark btn-sm" *ngIf="open" (click)="toggleSideBar()">
+        <i class="bi bi-arrow-bar-left"></i>
+        <span class="hoverText hover1">collapse sidebar</span>
+      </button>
+      <h4 class="text-white">Video Chat</h4>
+      <button *ngIf="!voiceService.isActive()" type="button" class="btn btn-success"
+              (click)="voiceService.toggleActive()">
+        <i class="bi bi-telephone-outbound-fill"></i>
+        <span class="hoverText ">join</span>
+      </button>
+      <button *ngIf="voiceService.isActive()" type="button" class="btn btn-danger"
+              (click)="voiceService.toggleActive()">
+        <i class="bi bi-telephone-x-fill"></i>
+        <span class="hoverText ">leave</span>
+      </button>
+      <button type="button" class="btn btn-dark" (click)="voiceService.toggleMuted()">
+        <i *ngIf="!voiceService.isMuted()" class="bi bi-mic-fill"></i>
+        <span *ngIf="!voiceService.isMuted()" class="hoverText ">mute</span>
+        <i *ngIf="voiceService.isMuted()" class="bi bi-mic-mute-fill"></i>
+        <span *ngIf="voiceService.isMuted()" class="hoverText">unmute</span>
+      </button>
+      <button type="button" class="btn btn-dark" (click)="voiceService.toggleCam()">
+        <i *ngIf="!voiceService.isCam()" class="bi bi-camera-video-off-fill"></i>
+        <span *ngIf="!voiceService.isCam()" class="hoverText">enable camera</span>
+        <i *ngIf="voiceService.isCam()" class="bi bi-camera-video-fill"></i>
+        <span *ngIf="voiceService.isCam()" class="hoverText">disable camera</span>
+      </button>
+      <button type="button" class="btn btn-dark" (click)="voiceService.toggleSound()">
+        <i *ngIf="!voiceService.isSound()" class="bi bi-volume-mute-fill"></i>
+        <span *ngIf="!voiceService.isSound()" class="hoverText">undeafen</span>
+        <i *ngIf="voiceService.isSound()" class="bi bi-volume-up-fill"></i>
+        <span *ngIf="voiceService.isSound()" class="hoverText">deafen</span>
+
+      </button>
+
+      <h4 class="text-white">Topics</h4>
+      <form #form="ngForm">
+        <div class="input-group mb-3">
+          <input type="text" class="form-control form-control-lg"
+                 placeholder="Create topic" name="newTopicName" (keydown.enter)="createTopic(form)"
+                 class="form-control" [(ngModel)]="newTopic.name" aria-describedby="basic-addon1">
+          <div class="input-group-prepend">
+            <span id="basic-addon1" class="input-group-text"
+                  (click)="createTopic(form)">
+              <i class="bi bi-plus"></i>
+            </span>
+          </div>
+        </div>
+      </form>
+
+      <div class="text-white" *ngFor="let topic of getTopic()">
+        <a class="nav-link" style=" display: inline;" routerLink="topic/{{topic.id}}/message"
+           routerLinkActive="active">
+          <i class="bi bi-chat-left-dots"></i> {{topic.name}}
+        </a>
+        <i class="pinUnpinIcon">
+          <i *ngIf="topic.pinned===true && authService.getUserRole() !== 'ADMIN'"
+             class="bi bi-pin-angle-fill"></i>
+          <i *ngIf="authService.getUserRole() === 'ADMIN' && topic.pinned===true" class="bi bi-pin-angle-fill m-2"
+             (click)="togglePin(topic.id)"></i>
+          <span *ngIf="authService.getUserRole() === 'ADMIN' && topic.pinned===true" class="hoverText hover1">unpin</span>
+          <i *ngIf="authService.getUserRole() === 'ADMIN' && topic.pinned===false" class="bi bi-pin-fill m-2"
+             (click)="togglePin(topic.id)"></i>
+          <span *ngIf="authService.getUserRole() === 'ADMIN' && topic.pinned===false" class="hoverText hover1">pin</span>
+        </i>
+        <i class="deleteIcon">
+          <i *ngIf="authService.getUserRole() === 'ADMIN'" class="bi bi-trash-fill"
+             (click)="deleteTopic(topic.id)"></i>
+          <span class="hoverText hover1">delete</span>
+        </i>
+      </div>
+
+      <h4 class="text-white">Meetings</h4>
+      <div class="text-white" *ngFor="let transcript of getTranscripts()">
+        <a class="nav-link" style=" display: inline;" routerLink="meeting/{{transcript.id}}/message"
+           routerLinkActive="active">
+          <i class="bi bi-chat-square-text"></i> {{transcript.name}}
+        </a> <i *ngIf="transcript.pinned===true && authService.getUserRole() !== 'ADMIN'"
+                class="bi bi-pin-angle-fill"></i>
+        <i class="pinUnpinIcon">
+          <i *ngIf="authService.getUserRole() === 'ADMIN' && transcript.pinned===true"
+             class="bi bi-pin-angle-fill m-2" (click)="togglePinTranscript(transcript.id)"></i>
+          <span *ngIf="authService.getUserRole() === 'ADMIN' && transcript.pinned===true" class="hoverText hover1">unpin</span>
+          <i *ngIf="authService.getUserRole() === 'ADMIN' && transcript.pinned===false" class="bi bi-pin-fill m-2"
+             (click)="togglePinTranscript(transcript.id)"></i>
+          <span *ngIf="authService.getUserRole() === 'ADMIN' && transcript.pinned===false" class="hoverText hover1">pin</span>
+        </i>
+        <i class="deleteIcon">
+        <i *ngIf="authService.getUserRole() === 'ADMIN'" class="bi bi-trash-fill"
+           (click)="deleteTranscript(transcript.id)"></i>
+          <span class="hoverText hover1">delete</span>
+        </i>
+      </div>
+
+    </div>
+  </div>
+</div>
+<button id="openSideBar" class="btn btn-dark btn-sm" *ngIf="!open" (click)="toggleSideBar()">
+  <i class="bi bi-arrow-bar-right"></i>
+  <span class="hoverText hover2">expand sidebar</span>
+</button>
+

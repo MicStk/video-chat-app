@@ -1,0 +1,133 @@
+<div class="container">
+  <div class="startButton d-flex justify-content-center p-0 m-0">
+    <button type="button" class="btn btn-success" (click)="startMeeting()"
+            *ngIf="recordedBy.length <= 0 && !isRecording">
+      Start Recording Meeting
+    </button>
+    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#meetingModal"
+            (click)="stopRecording()"
+            *ngIf="hasStartedRecording && isRecording || (authService.getUserRole() === 'ADMIN' && recordedBy.length > 0)">
+      End Meeting
+    </button>
+  </div>
+  <div id="banner" class="flex justify-content-center p-0 m-0 text-white text-center">
+    <div class="bg-secondary" *ngIf="recordedBy.length <= 0 && !isRecording">
+      Waiting for meeting to start...
+    </div>
+    <div class="bg-danger" *ngIf="recordedBy.length > 0 || isRecording">
+      Meeting in progress!
+    </div>
+  </div>
+
+
+  <div id="localVideo">
+    <div *ngIf="localVideo !== null" id="localVideoContainer" class="videoContainer">
+      <video id="localVideoVideo" #local_video autoplay playsinline [muted]="true"></video>
+      <img src="../../../assets/camera3.png" alt="" id="localVideoImageAlt" hidden>
+      <p id="videoLabelOwn"></p>
+      <button type="button" class="btn btn-danger" (click)="voiceService.toggleActive()">
+        <i class="bi bi-telephone-x-fill"></i>
+        <span class="hoverText">leave voice-chat</span>
+      </button>
+      <button type="button" class="btn btn-dark" (click)="voiceService.toggleMuted()">
+        <i *ngIf="!voiceService.isMuted()" class="bi bi-mic-fill"></i>
+        <span *ngIf="!voiceService.isMuted()" class="hoverText hover1">mute</span>
+        <i *ngIf="voiceService.isMuted()" class="bi bi-mic-mute-fill"></i>
+        <span *ngIf="voiceService.isMuted()" class="hoverText">unmute</span>
+      </button>
+      <button type="button" class="btn btn-dark" (click)="voiceService.toggleCam()">
+        <i *ngIf="!voiceService.isCam()" class="bi bi-camera-video-off-fill"></i>
+        <span *ngIf="!voiceService.isCam()" class="hoverText">enable camera</span>
+        <i *ngIf="voiceService.isCam()" class="bi bi-camera-video-fill"></i>
+        <span *ngIf="voiceService.isCam()" class="hoverText">disable camera</span>
+      </button>
+      <button type="button" class="btn btn-dark" (click)="voiceService.toggleSound()">
+        <i *ngIf="!voiceService.isSound()" class="bi bi-volume-mute-fill"></i>
+        <span *ngIf="!voiceService.isSound()" class="hoverText">undeafen</span>
+        <i *ngIf="voiceService.isSound()" class="bi bi-volume-up-fill"></i>
+        <span *ngIf="voiceService.isSound()" class="hoverText">deafen</span>
+      </button>
+    </div>
+  </div>
+
+  <div id="videos" class="videos">
+  </div>
+
+
+
+
+  <!-- Modal -->
+  <div class="modal fade" id="meetingModal" tabindex="-1" aria-labelledby="meetingModalLabel" aria-hidden="true"
+       data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog">
+
+      <div class="modal-content myModal">
+        <div class="modal-header">
+          <h5 class="modal-title" id="meetingModalLabel">End Meeting</h5>
+        </div>
+        <div class="modal-body">
+
+          <div class="card-body">
+            <form class="form" [formGroup]="meetingForm" (ngSubmit)="stopMeeting()">
+
+              <div class="form-group">
+                <label for="inputTitle">Title</label>
+                <input type="text" name="title" formControlName="title" class="form-control" id="inputTitle"
+                       aria-describedby="titleHelp" placeholder="Title">
+                <div *ngIf="submitted && meetingForm.controls.title.errors" class="error">
+                  <small class="form-text text-warning"
+                         *ngIf="meetingForm.controls.title.errors.required">
+                    A title is required!
+                  </small>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="inputDescription">Description</label>
+                <input type="text" name="description" formControlName="description" class="form-control"
+                       id="inputDescription"
+                       aria-describedby="descriptionHelp" placeholder="Description">
+                <div *ngIf="submitted && meetingForm.controls.description.errors" class="error">
+                  <small class="form-text text-warning"
+                         *ngIf="meetingForm.controls.description.errors.required">
+                    A description is required!
+                  </small>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="inputSummary">Summary</label>
+                <input type="text" name="summary" formControlName="summary" class="form-control"
+                       id="inputSummary"
+                       aria-describedby="summaryHelp" placeholder="Summary">
+                <div *ngIf="submitted && meetingForm.controls.summary.errors" class="error">
+                  <small class="form-text text-warning"
+                         *ngIf="meetingForm.controls.summary.errors.required">
+                    A summary is required!
+                  </small>
+                </div>
+              </div>
+
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" (click)="stopMeeting()">Save
+                  Meeting
+                </button>
+              </div>
+
+              <div *ngIf="success" class="text-center alert alert-success alert-dismissible fade show"
+                   role="alert">
+                <strong>Meeting has been saved!</strong>
+                <button type="button" (click)="vanishSuccess()" class="btn btn-primary"
+                        data-bs-dismiss="modal"
+                        data-dismiss="alert"
+                        aria-label="Close">Close
+                </button>
+              </div>
+
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

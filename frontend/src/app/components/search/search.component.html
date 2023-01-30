@@ -1,0 +1,102 @@
+<div class="d-flex flex-row w-auto">
+  <button class="btn btn-primary mr-1" (click)="reloadMessages()">
+    <i class="bi bi-arrow-clockwise"></i>
+    Reload
+  </button>
+  <button class="btn btn-danger mr-1 myButton" (click)="resetSearchParameters()">
+    <i class="bi bi-x-lg"></i>
+    Reset filters
+  </button>
+</div>
+
+<form class="d-flex flex-row w-auto mb-3" (submit)="reloadMessages()">
+  <button type="submit" hidden="true">submit</button>
+  <div class="flex-grow-1">
+    <label for="searchContent" class="col-form-label">
+      Message Text
+    </label>
+    <input type="text"
+           id="searchContent"
+           name="searchContent"
+           placeholder="Search message text ..."
+           class="form-control"
+           [(ngModel)]="ms.text"
+    >
+  </div>
+  <div class="flex-grow-2 ms-1">
+    <label for="searchAuthor" class="col-form-label">
+      Author
+    </label>
+    <input type="text"
+           name="searchAuthor"
+           id="searchAuthor"
+           placeholder="Search author ..."
+           class="form-control"
+           [(ngModel)]="ms.author"
+    >
+  </div>
+  <div class="ms-1">
+    <label for="searchFromDate" class="col-form-label">
+      From Date
+    </label>
+    <!-- pattern and placeholder are fallbacks for browser, that use a simple text input for type="date"
+         The date format of the plain HTML date input, in browser that support it is, sadly, not changeable in a cross-browser way
+      -->
+    <input type="date"
+           name="searchFromDate"
+           id="searchFromDate"
+           pattern="\d{4}-\d{2}-\d{2}"
+           placeholder="yyyy-mm-dd"
+           class="form-control"
+           [(ngModel)]="ms.fromTime"
+    >
+  </div>
+
+  <div class="ms-1">
+    <label for="searchToDate" class="col-form-label">
+      To Date
+    </label>
+    <!-- pattern and placeholder are fallbacks for browser, that use a simple text input for type="date"
+         The date format of the plain HTML date input, in browser that support it is, sadly, not changeable in a cross-browser way
+      -->
+    <input type="date"
+           name="searchToDate"
+           id="searchToDate"
+           pattern="\d{4}-\d{2}-\d{2}"
+           placeholder="yyyy-mm-dd"
+           class="form-control"
+           [(ngModel)]="ms.toTime"
+    >
+  </div>
+
+</form>
+
+
+<div class="mt-3">
+  <table class="table">
+    <thead>
+      <th>Message Text</th>
+      <th>Author</th>
+      <th>Timestamp</th>
+      <th>Message Location</th>
+      <th class="min-width">Open</th>
+    </thead>
+    <tbody *ngFor="let messageGroup of messageGroups">
+      <tr *ngFor="let message of messageGroup">
+        <td>{{message.content}}</td>
+        <td>{{message.user.firstName}}</td>
+        <td>{{message.timestamp | date: 'yyyy-MM-dd HH:mm:ss' : 'GMT+02:00' }}</td>
+        <td>{{message.container.name}}</td>
+        <td>
+          <div class="btn-group">
+            <a class="btn btn-primary responsive-info-button"
+               (click)="navigateTo(message)"
+               aria-label="Show message">
+              <i class="bi bi-box-arrow-in-right"></i>
+            </a>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

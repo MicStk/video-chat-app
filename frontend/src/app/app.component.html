@@ -1,0 +1,25 @@
+<div class="header" *ngIf="authService.isLoggedIn() || this.getRoute() === '/login'">
+  <app-header></app-header>
+</div>
+<div class="container">
+        <div id="side" class="left-side" *ngIf="authService.isLoggedIn()">
+          <app-sidebar></app-sidebar>
+        </div>
+        <div id="chatContainer">
+          <div id="chat">
+            <button *ngIf="authService.isLoggedIn()" id="closeChat" class="btn btn-dark btn-sm" (click)="toggleChat()">
+              <i class="bi bi-arrow-bar-left"></i>
+              <span class="hoverText hover closeChat">close Chat</span>
+            </button>
+            <router-outlet></router-outlet>
+          </div>
+          <button id="openChat" class="btn btn-dark btn-sm" *ngIf="!chatOpen && authService.isLoggedIn()" (click)="toggleChat()">
+            <i class="bi bi-arrow-bar-right"></i>
+            <span class="hoverText hover openChat">open Chat</span>
+          </button>
+        </div>
+        <div id="voice" class="voiceContainer" *ngIf="authService.isLoggedIn() && voiceService.isActive()">
+          <app-voice-chat></app-voice-chat>
+        </div>
+</div>
+<app-footer></app-footer>

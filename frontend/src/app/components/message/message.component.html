@@ -1,0 +1,87 @@
+<div class="mt-4 container col-md-8 mx-auto">
+  <button id="newMessagesInfo" class="btn btn-dark btn-sm" (click)="scrollChatDown()">
+    <i *ngIf="newMessages">New messages. </i>
+    <i class="bi bi-arrow-bar-down"></i>
+    <span class="hoverText hover1">scroll down</span>
+  </button>
+    <h3 class="text-white">{{topicName}}</h3>
+  <div class="scroll" #scrollDown id="scrollDown" (scroll)="scrolled($event)">
+    <div class="column">
+      <div class="card" style="width: 40rem;" #item *ngFor="let message of messages">
+        <div class="card-body border-1">
+          <h5 [attr.id]="message.id" class="card-title text-white">{{formatUserName(message.user)}}</h5>
+          <h6
+            class="card-subtitle mb-2 text-muted text-white">{{message.timestamp | date: 'yyyy-MM-dd HH:mm:ss' : 'GMT+02:00'}}
+            <span
+              class="card-subtitle mb-2 text-muted text-white" *ngIf="message.editedAt !== null">Last edited
+              at {{message.editedAt | date: 'yyyy-MM-dd HH:mm:ss' : 'GMT+01:00'}} </span>
+            <i             class="bi bi-link-45deg"
+                           (click)="copyLinkToClipboard(message)">
+              <span class="hoverText">copy message reference to clipboard</span>
+            </i>
+          </h6>
+          <span class="card-text text-white" >
+            <div [innerHTML]="message.renderedContent | async"></div>
+            <i *ngIf="userEmail === message.user.email && editMode === false "
+               class="bi bi-pencil-fill"
+               (click)="editMessage(this.message)">
+              <span class="hoverText">edit message</span>
+            </i>
+            <i *ngIf="(userEmail === message.user.email || userRole === 'ADMIN') && editMode === false"
+               class="bi bi-trash-fill m-2"
+               data-bs-toggle="modal" data-bs-target="#deleteModal" (click)="setDeleteId(this.message.id)">
+              <span class="hoverText">delete message</span>
+            </i>
+          </span>
+
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true"
+             data-bs-backdrop="static" data-bs-keyboard="false">>
+          <div class="modal-dialog">
+            <div class="modal-content  myModal">
+              <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Delete Message</h5>
+              </div>
+              <div class="modal-body">
+                Deleting a message removes it from the system permanently. Deleted messages cannot be restored. Are you
+                sure you
+                want to delete this message?
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="endDeleteMode()" data-bs-dismiss="modal">
+                  Cancel
+                </button>
+                <button type="button" (click)="deleteMessage()" data-bs-dismiss="modal" class="btn btn-danger">Delete
+                  Message
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<form #form="ngForm">
+  <div class="col-md-4 mx-auto text-white text-center editBanner">
+    <div *ngIf="editMode === true">
+      <i class="bi bi-x-circle-fill" (click)="endEditMode()"></i> Editing Message
+    </div>
+  </div>
+  <div class="card-footer text-muted col-md-7 mx-auto" id="submitField">
+    <div>
+      <input type="text" class="form-control form-control-lg"
+             placeholder="Type message" name="currentMessageContent" *ngIf="editMode === false"
+             (keydown.enter)="createMessage(form)"
+             class="form-control" [(ngModel)]="currentMessage.content">
+
+      <input type="text" class="form-control form-control-lg"
+             placeholder="Type message" name="currentMessageContent" *ngIf="editMode === true"
+             (keydown.enter)="updateMessage(form)"
+             class="form-control" [(ngModel)]="currentMessage.content">
+    </div>
+  </div>
+</form>

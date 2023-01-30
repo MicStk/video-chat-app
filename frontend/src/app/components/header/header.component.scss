@@ -1,0 +1,31 @@
+nav {
+  padding-left: 10px;
+  height: 60px;
+}
+
+img {
+  padding-right: 10px;
+}
+
+.myNavButton {
+  margin-right: 15px;
+}
+
+ul {
+  align-items: end;
+}
+
+.navbar-collapse ul a{
+  background-color: var(--bs-gray-700);
+  color: #fff;
+  width: 150px;
+  align-items: center;
+  display: inline;
+  padding-left: 10px;
+  border-radius: 10px;
+  margin: 5px 10px 5px 0;
+}
+
+.navbar-collapse ul a:first-child{
+  margin-top: 10px;
+}

@@ -1,0 +1,30 @@
+form {
+  height: auto;
+  width: 600px;
+  padding: 30px 30px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+form select {
+  display: block;
+  height: 50px;
+  width: 130px;
+  background-color: rgba(255,255,255,0.07);
+  border-radius: 3px;
+  margin-top: 8px;
+  padding: 0 10px;
+}
+
+form option {
+  background-color: rgb(66,66,73);
+}
+
+form button {
+  margin-top: 30px;
+}
+
+label {
+  margin-top: 20px;
+}

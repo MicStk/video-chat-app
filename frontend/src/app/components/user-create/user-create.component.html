@@ -1,0 +1,113 @@
+<div *ngIf="error" class="alert alert-warning alert-dismissible fade show col-md-8 mx-auto" role="alert">
+    <strong>Creation problems!</strong> {{ errorMessage }}
+    <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div *ngIf="success" class="text-center alert alert-success alert-dismissible fade show col-md-8 mx-auto" role="alert">
+    <strong>User has been created!</strong>
+    <button type="button" (click)="vanishSuccess()" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="pt-5">
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <span class="anchor" id="formCreate"></span>
+
+            <form class="form" [formGroup]="createForm" (ngSubmit)="submitUser()">
+                <h3>Create a new User</h3>
+
+                <div class="form-group">
+                    <label for="inputFirstName">First Name</label>
+                    <input type="text" name="firstName" formControlName="firstName" id="inputFirstName"
+                           aria-describedby="firstNameHelp" placeholder="First Name">
+                    <div *ngIf="submitted && createForm.controls.firstName.errors" class="error">
+                        <small class="form-text text-warning" *ngIf="createForm.controls.firstName.errors.required">A
+                            first name
+                            is required!
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="inputLastName">Last Name</label>
+                    <input type="text" name="lastName" formControlName="lastName" id="inputLastName"
+                           aria-describedby="lastNameHelp" placeholder="Last Name">
+                    <div *ngIf="submitted && createForm.controls.lastName.errors" class="error">
+                        <small class="form-text text-warning" *ngIf="createForm.controls.lastName.errors.required">A
+                            last name
+                            is required!
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="inputUsername">E-Mail</label>
+                    <input type="text" name="username" formControlName="username" id="inputUsername"
+                           aria-describedby="usernameHelp" placeholder="E-Mail">
+                    <div *ngIf="submitted && createForm.controls.username.errors" class="error">
+                        <small class="form-text text-warning" *ngIf="createForm.controls.username.errors.required">An
+                            e-mail is
+                            required!
+                        </small>
+                        <small class="form-text text-warning"
+                               *ngIf="createForm.controls.username.errors && !createForm.controls.username.errors.required">The
+                            email is invalid!
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" name="password" formControlName="password" id="password"
+                           placeholder="Password">
+                    <div *ngIf="submitted && createForm.controls.password.errors" class="error">
+                        <small class="form-text text-warning" *ngIf="createForm.controls.password.errors.required">A
+                            password
+                            is required!
+                        </small>
+                        <small class="form-text text-warning" *ngIf="createForm.controls.password.errors.minlength">A
+                            password
+                            must be at least 8 characters long!
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="password">Confirm Password</label>
+                    <input type="password" name="passwordCheck" formControlName="passwordCheck" id="passwordCheck"
+                           placeholder="Password">
+                    <div *ngIf="submitted && createForm.controls.passwordCheck.errors" class="error">
+                        <small class="form-text text-warning" *ngIf="createForm.controls.passwordCheck.errors.required">You
+                            have to confirm your password!
+                        </small>
+                        <small class="form-text text-warning"
+                               *ngIf="createForm.hasError && !createForm.controls.passwordCheck.errors.required">Passwords
+                            do not match!
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="role">Role</label>
+                    <select name="role" formControlName="role" id="role">
+                        <option [selected]="true">Select role</option>
+                        <option value="EMPLOYEE">Employee</option>
+                        <option value="ADMIN">Admin</option>
+                    </select>
+                    <div *ngIf="submitted && createForm.controls.role.errors" class="error">
+                        <small class="form-text text-warning" *ngIf="createForm.controls.role.errors.required">A role is
+                            required!
+                        </small>
+                    </div>
+                </div>
+
+                <button type="button" (click)="submitUser()" class="btn btn-success float-right">Create</button>
+
+            </form>
+
+        </div>
+    </div>
+</div>

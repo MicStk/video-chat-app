@@ -1,0 +1,15 @@
+<div class="container puff-in-center" *ngIf="!authService.isLoggedIn()">
+
+    <div class="jumbotron mt-5">
+        <h1 class="display-4">Welcome to <br> Chatify4Business!</h1>
+        <hr class="my-4">
+        <a class="btn btn-light btn-lg" routerLink="/login" role="button">Login</a>
+    </div>
+
+</div>
+
+<div class="container" id="homeLoggedIn" *ngIf="authService.isLoggedIn()">
+  <h2 class="fade-in-right1">&#8592; Join Video Chat</h2>
+  <h2 class="fade-in-right2">&#8592; Create new Topics</h2>
+  <h2 class="fade-in-right3">&#8592; Open Topics or Meeting Transcripts</h2>
+</div>
